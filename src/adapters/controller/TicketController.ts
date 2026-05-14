@@ -7,8 +7,8 @@ import { GetTicketsUseCase } from '../../application/usecases/tickets/GetTickets
 import { GetTicketByIdUseCase } from '../../application/usecases/tickets/GetTicketByIdUseCase';
 import { UpdateTicketUseCase } from '../../application/usecases/tickets/UpdateTicketUseCase';
 import { AddCommentUseCase } from '../../application/usecases/tickets/AddCommentUseCase';
-import { authMiddleware, roleMiddleware } from '../../frameworks/middleware';
-import { SuccessResponse } from '../../frameworks/types';
+import { authMiddleware, roleMiddleware } from '@/src/frameworks/middleware';
+import { SuccessResponse } from '@/src/frameworks/types';
 
 export class TicketController {
   public router: Router = Router();

@@ -1,4 +1,4 @@
-import { Comment } from '../../adapters/models/Comment';
+import { TicketComment } from '../../adapters/models/TicketComment';
 
 export interface CreateCommentDTO {
   ticketId: string;
@@ -7,6 +7,6 @@ export interface CreateCommentDTO {
 }
 
 export interface ICommentRepository {
-  create(data: CreateCommentDTO): Promise<Comment>;
-  findByTicketId(ticketId: string): Promise<Comment[]>;
+  create(data: CreateCommentDTO): Promise<TicketComment>;
+  findByTicketId(ticketId: string): Promise<TicketComment[]>;
 }

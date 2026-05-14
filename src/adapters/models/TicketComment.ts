@@ -10,7 +10,7 @@ import { User } from './User';
 import { Ticket } from './Ticket';
 
 @Entity('comments')
-export class Comment {
+export class TicketComment {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 

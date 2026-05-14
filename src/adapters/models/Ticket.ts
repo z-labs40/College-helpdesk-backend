@@ -9,7 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { User } from './User';
-import { Comment } from './Comment';
+import { TicketComment } from './TicketComment';
 
 export type TicketStatus =
   | 'Open'
@@ -91,8 +91,8 @@ export class Ticket {
   @Column({ type: 'jsonb', nullable: true })
   resolution?: Resolution;
 
-  @OneToMany(() => Comment, (comment) => comment.ticket)
-  comments?: Comment[];
+  @OneToMany(() => TicketComment, (comment) => comment.ticket)
+  comments?: TicketComment[];
 
   @CreateDateColumn()
   createdAt!: Date;

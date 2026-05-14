@@ -4,7 +4,7 @@ import { config } from '../config';
 import { Logger } from '../shared/logger';
 import { User } from '../adapters/models/User';
 import { Ticket } from '../adapters/models/Ticket';
-import { Comment } from '../adapters/models/Comment';
+import { TicketComment } from '../adapters/models/TicketComment';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -15,7 +15,7 @@ export const AppDataSource = new DataSource({
   database: config.db.name,
   synchronize: true, // dev only — use migrations for production
   logging: false,
-  entities: [User, Ticket, Comment],
+  entities: [User, Ticket, TicketComment],
   subscribers: [],
   migrations: [],
   ssl: process.env.NODE_ENV === 'production'

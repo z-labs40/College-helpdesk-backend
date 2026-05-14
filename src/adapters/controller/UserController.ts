@@ -2,8 +2,8 @@ import { Request, Response, Router } from 'express';
 import { UserImpl } from '../repositories/UserImpl';
 import { AppDataSource } from '../../infrastructure/database';
 import { GetTechniciansUseCase } from '../../application/usecases/users/GetTechniciansUseCase';
-import { authMiddleware, roleMiddleware } from '../../frameworks/middleware';
-import { SuccessResponse } from '../../frameworks/types';
+import { authMiddleware, roleMiddleware } from '@/src/frameworks/middleware';
+import { SuccessResponse } from '@/src/frameworks/types';
 
 export class UserController {
   public router: Router = Router();
