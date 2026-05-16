@@ -19,5 +19,10 @@ export default (): AppConfig => {
       pass: process.env.SMTP_PASS as string,
       from: process.env.SMTP_FROM_EMAIL || '"College Helpdesk" <noreply@helpdesk.com>',
     },
+    brevo: {
+      apiKey: process.env.BREVO_API_KEY as string,
+      senderEmail: process.env.BREVO_SENDER_EMAIL || 'noreply@college-helpdesk.com',
+      senderName: process.env.BREVO_SENDER_NAME || 'College Helpdesk',
+    },
   };
 };

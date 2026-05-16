@@ -20,6 +20,11 @@ export interface AppConfig {
     pass: string;
     from: string;
   };
+  brevo: {
+    apiKey: string;
+    senderEmail: string;
+    senderName: string;
+  };
 }
 
 export class Config {
@@ -32,6 +37,8 @@ export class Config {
       { key: 'JWT_SECRET', value: config.jwt.secret },
       { key: 'JWT_EXPIRE', value: config.jwt.expiresIn },
       { key: 'OTP_EXPIRY_MINUTES', value: config.otpExpiryMinutes },
+      { key: 'BREVO_API_KEY', value: config.brevo.apiKey },
+      { key: 'BREVO_SENDER_EMAIL', value: config.brevo.senderEmail },
     ];
 
     const missing = requiredVars

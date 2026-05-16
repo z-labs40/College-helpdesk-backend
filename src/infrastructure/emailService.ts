@@ -1,24 +1,16 @@
-import nodemailer from 'nodemailer';
+import { BrevoClient } from '@getbrevo/brevo';
 import { Logger } from '../shared/logger';
 import { config } from '../config';
 
-const { smtp } = config;
-
-const transporter = nodemailer.createTransport({
-  service: smtp.host.includes('gmail') ? 'gmail' : undefined,
-  host: !smtp.host.includes('gmail') ? smtp.host : undefined,
-  port: smtp.port,
-  secure: smtp.port === 465,
-  auth: {
-    user: smtp.user,
-    pass: smtp.pass,
-  },
+const client = new BrevoClient({ 
+  apiKey: config.brevo.apiKey 
 });
 
+/**
+ * Sends an OTP email for password reset
+ */
 export const sendOTPEmail = async (email: string, otp: string): Promise<void> => {
-  const subject = 'College Helpdesk — Password Reset OTP';
-
-  const html = `
+  const htmlContent = `
     <!doctype html>
     <html>
     <head>
@@ -56,18 +48,77 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<void> =>
   `;
 
   try {
-    await transporter.sendMail({
-      from: smtp.from,
-      to: email,
-      subject,
-      html,
-      text: `Your password reset OTP is: ${otp}\nValid for ${config.otpExpiryMinutes} minutes.`,
+    await client.transactionalEmails.sendTransacEmail({
+      subject: 'College Helpdesk — Password Reset OTP',
+      to: [{ email }],
+      sender: { 
+        name: config.brevo.senderName, 
+        email: config.brevo.senderEmail 
+      },
+      htmlContent,
+      textContent: `Your password reset OTP is: ${otp}\nValid for ${config.otpExpiryMinutes} minutes.`
     });
-    Logger.info(`✅ OTP email sent to ${email}`);
+    Logger.info(`✅ Brevo: OTP email sent to ${email}`);
   } catch (error) {
-    Logger.error(`❌ Failed to send OTP email to ${email}: ${error}`);
+    Logger.error(`❌ Brevo: Failed to send OTP email to ${email}: ${JSON.stringify(error)}`);
     throw error;
   }
 };
 
-export default { sendOTPEmail };
+/**
+ * Sends an invite email for new users/technicians
+ */
+export const sendInviteEmail = async (email: string, name: string, inviteLink: string): Promise<void> => {
+  const htmlContent = `
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { background:#0f172a; color:#e2e8f0; font-family:'Inter',-apple-system,sans-serif; margin:0; padding:0; }
+        .wrapper { background:#0f172a; padding:40px 20px; }
+        .container { max-width:600px; margin:0 auto; background:#1e293b; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.05); }
+        .header { background:linear-gradient(135deg,#059669,#10b981); padding:40px 32px; text-align:center; color:#fff; }
+        .header h1 { margin:0; font-size:22px; font-weight:800; }
+        .content { padding:40px 32px; }
+        .message { font-size:16px; line-height:1.6; color:#94a3b8; margin-bottom:24px; }
+        .btn { display:inline-block; background:#10b981; color:#fff; padding:14px 28px; border-radius:8px; text-decoration:none; font-weight:600; margin-top:16px; }
+        .footer { padding:24px 32px; background:#111827; color:#475569; font-size:13px; text-align:center; }
+      </style>
+    </head>
+    <body>
+      <div class="wrapper">
+        <div class="container">
+          <div class="header"><h1>WELCOME TO THE TEAM</h1></div>
+          <div class="content">
+            <div class="message">Hello ${name},<br><br>You have been invited to join the <strong>College Helpdesk</strong> as a member of our team. Click the button below to complete your registration.</div>
+            <div style="text-align:center;">
+              <a href="${inviteLink}" class="btn">Complete Registration</a>
+            </div>
+            <div style="color:#64748b;font-size:14px;text-align:center;margin-top:32px;">This link will expire in 24 hours.</div>
+          </div>
+          <div class="footer"><p>This is an automated message from College Helpdesk.</p></div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await client.transactionalEmails.sendTransacEmail({
+      subject: 'Welcome to College Helpdesk — Join the Team',
+      to: [{ email }],
+      sender: { 
+        name: config.brevo.senderName, 
+        email: config.brevo.senderEmail 
+      },
+      htmlContent
+    });
+    Logger.info(`✅ Brevo: Invite email sent to ${email}`);
+  } catch (error) {
+    Logger.error(`❌ Brevo: Failed to send invite email to ${email}: ${JSON.stringify(error)}`);
+    throw error;
+  }
+};
+
+export default { sendOTPEmail, sendInviteEmail };
