@@ -1,7 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { TicketImpl } from '../repositories/TicketImpl';
 import { CommentImpl } from '../repositories/CommentImpl';
-import { AppDataSource } from '../../infrastructure/database';
 import { CreateTicketUseCase } from '../../application/usecases/tickets/CreateTicketUseCase';
 import { GetTicketsUseCase } from '../../application/usecases/tickets/GetTicketsUseCase';
 import { GetTicketByIdUseCase } from '../../application/usecases/tickets/GetTicketByIdUseCase';
@@ -16,8 +15,8 @@ export class TicketController {
   private commentRepository: CommentImpl;
 
   constructor() {
-    this.ticketRepository = new TicketImpl(AppDataSource);
-    this.commentRepository = new CommentImpl(AppDataSource);
+    this.ticketRepository = new TicketImpl();
+    this.commentRepository = new CommentImpl();
 
     // All authenticated users
     this.router.get('/', authMiddleware, this.getTickets.bind(this));

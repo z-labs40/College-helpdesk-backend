@@ -1,39 +1,52 @@
-import { DataSource, Repository } from 'typeorm';
 import { User } from '../models/User';
 import { IUserRepository } from '../../application/interfaces/IUserRepository';
+import { db } from '../../config/firebase';
 
 export class UserImpl implements IUserRepository {
-  private repository: Repository<User>;
-
-  constructor(dataSource: DataSource) {
-    this.repository = dataSource.getRepository(User);
-  }
+  private collection = db.collection('users');
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.repository.findOne({ where: { email } });
+    const snapshot = await this.collection.where('email', '==', email).limit(1).get();
+    if (snapshot.empty) return null;
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as User;
   }
 
   async findById(id: string): Promise<User | null> {
-    return this.repository.findOne({ where: { id } });
+    const doc = await this.collection.doc(id).get();
+    if (!doc.exists) return null;
+    return { id: doc.id, ...doc.data() } as User;
   }
 
   async create(user: Partial<User>): Promise<User> {
-    const newUser = this.repository.create(user);
-    return this.repository.save(newUser);
+    const data = {
+      ...user,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const ref = await this.collection.add(data);
+    return { id: ref.id, ...data } as User;
   }
 
   async update(id: string, data: Partial<User>): Promise<void> {
-    await this.repository.update(id, data);
+    await this.collection.doc(id).update({
+      ...data,
+      updatedAt: new Date(),
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.collection.doc(id).delete();
   }
 
   async findAll(): Promise<User[]> {
-    return this.repository.find({ order: { createdAt: 'DESC' } });
+    const snapshot = await this.collection.orderBy('createdAt', 'desc').get();
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as User));
   }
 
   async findByRole(role: string): Promise<User[]> {
-    return this.repository.find({
-      where: { role: role as any },
-      order: { name: 'ASC' },
-    });
+    const snapshot = await this.collection.where('role', '==', role).get();
+    const users = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as User));
+    return users.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   }
 }

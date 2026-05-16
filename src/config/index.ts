@@ -4,14 +4,6 @@ import { Logger } from '../shared/logger';
 
 dotenv.config();
 
-export interface DBConfig {
-  host: string;
-  port: number;
-  user: string;
-  password?: string;
-  name: string;
-}
-
 export interface AppConfig {
   port: number;
   env: string;
@@ -20,7 +12,6 @@ export interface AppConfig {
     secret: string;
     expiresIn: string;
   };
-  db: DBConfig;
   otpExpiryMinutes: number;
   smtp: {
     host: string;
@@ -40,10 +31,6 @@ export class Config {
       { key: 'NODE_ENV', value: config.env },
       { key: 'JWT_SECRET', value: config.jwt.secret },
       { key: 'JWT_EXPIRE', value: config.jwt.expiresIn },
-      { key: 'DB_HOST', value: config.db.host },
-      { key: 'DB_PORT', value: config.db.port },
-      { key: 'DB_USER', value: config.db.user },
-      { key: 'DB_NAME', value: config.db.name },
       { key: 'OTP_EXPIRY_MINUTES', value: config.otpExpiryMinutes },
     ];
 

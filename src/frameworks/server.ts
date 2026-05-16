@@ -1,10 +1,10 @@
-import 'reflect-metadata';
+
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { networkInterfaces } from 'os';
 import { config, AppConfig } from '../config';
-import { initializeDataSource } from '../infrastructure/database';
+import '../config/firebase';
 import { Logger } from '../shared/logger';
 import { errorHandler, loggerMiddleware } from './middleware';
 import registerRoutes from './routes';
@@ -95,18 +95,10 @@ const startServer = async (cfg: AppConfig) => {
     process.exit(1);
   });
 
-  // Init DB after server is already listening
-  try {
-    await initializeDataSource();
-    Logger.info('✅ Database initialized');
-  } catch (err) {
-    Logger.error(`❌ Database initialization failed: ${err}`);
-    Logger.error('⚠️  Server is running but database is NOT connected');
-  }
-
   // Register routes
   try {
     registerRoutes(app);
+    Logger.info('✅ Routes registered successfully');
   } catch (err) {
     Logger.error(`❌ Route registration failed: ${err}`);
   } finally {

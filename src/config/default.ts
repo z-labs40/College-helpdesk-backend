@@ -11,13 +11,6 @@ export default (): AppConfig => {
       secret: process.env.JWT_SECRET as string,
       expiresIn: process.env.JWT_EXPIRE as string,
     },
-    db: {
-      host: process.env.DB_HOST as string,
-      port: Number(process.env.DB_PORT),
-      user: process.env.DB_USER as string,
-      password: process.env.DB_PASSWORD as string,
-      name: process.env.DB_NAME as string,
-    },
     otpExpiryMinutes: Number(process.env.OTP_EXPIRY_MINUTES) || 10,
     smtp: {
       host: process.env.SMTP_HOST || 'smtp.gmail.com',

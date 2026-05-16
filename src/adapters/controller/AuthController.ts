@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express';
 import { UserImpl } from '../repositories/UserImpl';
-import { AppDataSource } from '../../infrastructure/database';
 import { LoginUseCase } from '../../application/usecases/auth/LoginUseCase';
 import { RegisterUseCase } from '../../application/usecases/auth/RegisterUseCase';
 import { ForgotPasswordUseCase } from '../../application/usecases/auth/ForgotPasswordUseCase';
@@ -15,7 +14,7 @@ export class AuthController {
   private userRepository: UserImpl;
 
   constructor() {
-    this.userRepository = new UserImpl(AppDataSource);
+    this.userRepository = new UserImpl();
     this.router.post('/login', this.login.bind(this));
     this.router.post('/register', this.register.bind(this));
     this.router.post('/forgot-password', this.forgotPassword.bind(this));

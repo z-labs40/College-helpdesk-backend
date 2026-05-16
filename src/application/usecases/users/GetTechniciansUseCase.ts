@@ -9,6 +9,7 @@ export class GetTechniciansUseCase {
       id: t.id,
       name: t.name,
       email: t.email,
+      role: t.role,
       department: t.department,
     }));
   }

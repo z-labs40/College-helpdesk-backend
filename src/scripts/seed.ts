@@ -1,13 +1,11 @@
-import 'reflect-metadata';
 import bcrypt from 'bcryptjs';
-import { AppDataSource, initializeDataSource } from '../infrastructure/database';
-import { User } from '../adapters/models/User';
+import { db } from '../config/firebase';
 import { Logger } from '../shared/logger';
+import { UserRole } from '../adapters/models/User';
 
 async function seed() {
   try {
-    await initializeDataSource();
-    const userRepository = AppDataSource.getRepository(User);
+    const usersRef = db.collection('users');
 
     const defaultPassword = await bcrypt.hash('password123', 10);
 
@@ -16,15 +14,17 @@ async function seed() {
         name: 'Admin User',
         email: 'admin@college.edu',
         password: defaultPassword,
-        role: 'admin' as const,
+        role: 'admin' as UserRole,
         department: 'IT',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ];
 
     for (const u of users) {
-      const exists = await userRepository.findOneBy({ email: u.email });
-      if (!exists) {
-        await userRepository.save(userRepository.create(u));
+      const snapshot = await usersRef.where('email', '==', u.email).get();
+      if (snapshot.empty) {
+        await usersRef.add(u);
         Logger.info(`✅ Created user: ${u.email} (${u.role})`);
       } else {
         Logger.info(`ℹ️ User already exists: ${u.email}`);
