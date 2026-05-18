@@ -40,6 +40,11 @@ export class UpdateTicketUseCase {
       throw new ForbiddenError('Only admins can assign tickets');
     }
 
+    // Validate that once a technician is assigned, it cannot be reassigned
+    if (data.assignedToId && ticket.assignedToId && ticket.assignedToId !== data.assignedToId) {
+      throw new BadRequestError('This ticket is already assigned and cannot be reassigned');
+    }
+
     await this.ticketRepository.update(ticketId, data);
     return this.ticketRepository.findById(ticketId);
   }

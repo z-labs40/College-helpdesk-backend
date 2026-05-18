@@ -25,6 +25,7 @@ export interface Resolution {
   materials?: string;
   timeSpent?: number; // in minutes
   resolvedAt: string;
+  imageUrls?: string[];
 }
 
 export interface Ticket {
@@ -35,6 +36,9 @@ export interface Ticket {
   priority: TicketPriority;
   location?: string;
   status: TicketStatus;
+  imageUrl?: string;
+  image?: string;
+  imageUrls?: string[];
   
   createdBy?: User;
   createdById: string;

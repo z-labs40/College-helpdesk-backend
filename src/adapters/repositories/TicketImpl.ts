@@ -44,6 +44,8 @@ export class TicketImpl implements ITicketRepository {
       priority: data.priority,
       location: data.location || null,
       createdById: data.createdById,
+      imageUrl: data.imageUrl || data.image || null,
+      imageUrls: data.imageUrls || null,
       status: 'Open',
       createdAt: new Date(),
       updatedAt: new Date(),

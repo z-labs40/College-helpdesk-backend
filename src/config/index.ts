@@ -25,6 +25,11 @@ export interface AppConfig {
     senderEmail: string;
     senderName: string;
   };
+  cloudinary?: {
+    cloudName: string;
+    apiKey: string;
+    apiSecret: string;
+  };
 }
 
 export class Config {

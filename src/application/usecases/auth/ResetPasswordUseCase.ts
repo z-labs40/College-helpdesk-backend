@@ -14,7 +14,7 @@ export class ResetPasswordUseCase {
     if (!isValid) throw new BadRequestError('Invalid or expired OTP');
 
     const hashed = await bcrypt.hash(newPassword, 10);
-    await this.userRepository.update(user.id, { password: hashed });
+    await this.userRepository.update(user.id!, { password: hashed });
 
     OTPStore.clearOTP(email);
 

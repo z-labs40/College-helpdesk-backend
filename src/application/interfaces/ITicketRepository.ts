@@ -8,6 +8,9 @@ export interface CreateTicketDTO {
   priority: string;
   location?: string;
   createdById: string;
+  imageUrl?: string;
+  image?: string;
+  imageUrls?: string[];
 }
 
 export interface UpdateTicketDTO {

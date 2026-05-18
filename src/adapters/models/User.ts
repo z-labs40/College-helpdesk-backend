@@ -7,6 +7,7 @@ export interface User {
   password?: string; // Optional because we might omit it when returning to client
   role: UserRole;
   department?: string;
+  phoneNumber?: string;
   createdAt: Date;
   updatedAt: Date;
 }

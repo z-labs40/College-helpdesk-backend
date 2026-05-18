@@ -9,7 +9,7 @@ export class LoginUseCase {
 
   async execute(email: string, password: string) {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new UnauthorizedError('Invalid email or password');
+    if (!user || !user.password) throw new UnauthorizedError('Invalid email or password');
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) throw new UnauthorizedError('Invalid email or password');

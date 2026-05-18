@@ -5,6 +5,7 @@ import { RegisterUseCase } from '../../application/usecases/auth/RegisterUseCase
 import { ForgotPasswordUseCase } from '../../application/usecases/auth/ForgotPasswordUseCase';
 import { VerifyOTPUseCase } from '../../application/usecases/auth/VerifyOTPUseCase';
 import { ResetPasswordUseCase } from '../../application/usecases/auth/ResetPasswordUseCase';
+import { ChangePasswordUseCase } from '../../application/usecases/auth/ChangePasswordUseCase';
 import { GetMeUseCase } from '../../application/usecases/users/GetMeUseCase';
 import { authMiddleware } from '../../frameworks/middleware';
 import { SuccessResponse } from '../../frameworks/types';
@@ -21,6 +22,7 @@ export class AuthController {
     this.router.post('/verify-otp', this.verifyOTP.bind(this));
     this.router.post('/reset-password', this.resetPassword.bind(this));
     this.router.get('/me', authMiddleware, this.getMe.bind(this));
+    this.router.post('/change-password', authMiddleware, this.changePassword.bind(this));
   }
 
   async login(req: Request, res: Response, next: any) {
@@ -66,6 +68,18 @@ export class AuthController {
     try {
       const result = await new GetMeUseCase(this.userRepository).execute(req.user.id);
       res.status(200).json({ ok: true, data: result } as SuccessResponse<typeof result>);
+    } catch (err) { next(err); }
+  }
+
+  async changePassword(req: any, res: Response, next: any) {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const result = await new ChangePasswordUseCase(this.userRepository).execute(
+        req.user.id,
+        currentPassword,
+        newPassword
+      );
+      res.status(200).json({ ok: true, data: result, message: 'Password updated successfully' } as SuccessResponse<typeof result>);
     } catch (err) { next(err); }
   }
 }

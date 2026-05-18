@@ -79,7 +79,12 @@ export class UserController {
 
   async updateTechnician(req: Request, res: Response, next: any) {
     try {
-      const result = await new UpdateTechnicianUseCase(this.userRepository).execute(req.params.id, req.body);
+      const adminInfo = (req as any).user;
+      const result = await new UpdateTechnicianUseCase(this.userRepository).execute(
+        req.params.id,
+        req.body,
+        adminInfo
+      );
       res.status(200).json({ ok: true, data: result } as SuccessResponse<typeof result>);
     } catch (err) { next(err); }
   }

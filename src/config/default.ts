@@ -21,8 +21,13 @@ export default (): AppConfig => {
     },
     brevo: {
       apiKey: process.env.BREVO_API_KEY as string,
-      senderEmail: process.env.BREVO_SENDER_EMAIL || 'noreply@college-helpdesk.com',
+      senderEmail: process.env.BREVO_SENDER_EMAIL || 'mohamedhudhaifazubair@gmail.com',
       senderName: process.env.BREVO_SENDER_NAME || 'College Helpdesk',
+    },
+    cloudinary: {
+      cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+      apiKey: process.env.CLOUDINARY_API_KEY || '',
+      apiSecret: process.env.CLOUDINARY_API_SECRET || '',
     },
   };
 };

@@ -11,6 +11,7 @@ export class GetTechniciansUseCase {
       email: t.email,
       role: t.role,
       department: t.department,
+      phoneNumber: t.phoneNumber,
     }));
   }
 }
