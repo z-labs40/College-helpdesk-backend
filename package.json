@@ -5,7 +5,7 @@
   "main": "dist/frameworks/server.js",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/frameworks/server.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/frameworks/server.js",
     "start:clean": "taskkill /F /IM node.exe /T 2>nul & timeout /t 2 /nobreak >nul & npm run dev",
     "seed": "ts-node -r tsconfig-paths/register src/scripts/seed.ts"
@@ -40,6 +40,7 @@
     "@types/node": "^22.9.0",
     "@types/nodemailer": "^8.0.0",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.17",
     "typescript": "^5.6.3"
   }
 }
